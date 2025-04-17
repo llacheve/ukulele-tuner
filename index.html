@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ukulele Tuner</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="note-display">Play a note...</div>
+  <div id="detected-frequency">-- Hz</div>
+  <canvas id="tuner-needle" width="300" height="150"></canvas>
+
+  <div id="string-buttons">
+    <button class="string-btn" data-note="G4">G</button>
+    <button class="string-btn" data-note="C4">C</button>
+    <button class="string-btn" data-note="E4">E</button>
+    <button class="string-btn" data-note="A4">A</button>
+  </div>
+
+  <button id="start-button">Start Tuner</button>
+  <audio id="ding-sound" src="ding.mp3" preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>

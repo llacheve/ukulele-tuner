@@ -1,0 +1,59 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: #111;
+  color: white;
+  padding: 2rem;
+}
+
+#note-display {
+  font-size: 1.8rem;
+  margin: 1rem 0;
+}
+
+#note-display.in-tune {
+  color: green;
+}
+
+#detected-frequency {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+canvas {
+  margin: 2rem auto;
+  border: 1px solid #444;
+  background-color: #000;
+}
+
+#string-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 1rem;
+}
+
+.string-btn {
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.string-btn.active {
+  background-color: #1abc9c;
+}
+
+button {
+  margin-top: 2rem;
+  padding: 0.6rem 1.4rem;
+  font-size: 1rem;
+  background-color: #1abc9c;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
