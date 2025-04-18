@@ -52,7 +52,7 @@ async function startTuner() {
   filter.frequency.value = 1000;
   source.connect(filter);
 
-  const analyser = audioContext.createAnalyser();
+  const analyser = audioContext.createAnalyser();analyser.fftSize = 2048;
   filter.connect(analyser);
   const buffer = new Float32Array(analyser.fftSize);
 
