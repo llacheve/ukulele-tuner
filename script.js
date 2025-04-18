@@ -28,8 +28,10 @@ document.querySelectorAll(".string-btn").forEach(btn => {
 function getClosestNote(freq) {
   let closest = null;
   let minDiff = Infinity;
-  for (let note in ukuleleNotes) {
-    let diff = Math.abs(ukuleleNotes[note] - freq);
+  const notesToCheck = selectedNote ? { [selectedNote]: ukuleleNotes[selectedNote] } : ukuleleNotes;
+
+  for (let note in notesToCheck) {
+    let diff = Math.abs(notesToCheck[note] - freq);
     if (diff < minDiff) {
       minDiff = diff;
       closest = note;
@@ -52,7 +54,8 @@ async function startTuner() {
   filter.frequency.value = 1000;
   source.connect(filter);
 
-  const analyser = audioContext.createAnalyser();analyser.fftSize = 2048;
+  const analyser = audioContext.createAnalyser();
+  analyser.fftSize = 2048;
   filter.connect(analyser);
   const buffer = new Float32Array(analyser.fftSize);
 
@@ -61,8 +64,13 @@ async function startTuner() {
     const rawFreq = autoCorrelate(buffer, audioContext.sampleRate);
     if (rawFreq !== -1) {
       pitchHistory.push(rawFreq);
-      if (pitchHistory.length > 5) pitchHistory.shift();
+      if (pitchHistory.length > 8) pitchHistory.shift();
       const avgFreq = pitchHistory.reduce((a, b) => a + b, 0) / pitchHistory.length;
+
+      if (avgFreq < 100 || avgFreq > 600) {
+        requestAnimationFrame(detectPitch);
+        return;
+      }
 
       frequencyDisplay.textContent = `${avgFreq.toFixed(1)} Hz`;
 
@@ -83,9 +91,13 @@ async function startTuner() {
 
         const now = Date.now();
         if (now - lastPlayTime > SOUND_COOLDOWN_MS) {
-          ding.currentTime = 0;
-          ding.play();
-          lastPlayTime = now;
+          try {
+            ding.currentTime = 0;
+            ding.play();
+            lastPlayTime = now;
+          } catch (e) {
+            console.warn("Ding sound failed to play:", e);
+          }
         }
       } else if (diff > 0) {
         noteDisplay.textContent = `🔺 ${note} — Too Sharp → Loosen`;
@@ -103,11 +115,7 @@ async function startTuner() {
 }
 
 document.getElementById("start-button").addEventListener("click", () => {
-  const AudioCtx = window.AudioContext || window.webkitAudioContext;
-  const context = new AudioCtx();
-  if (context.state === "suspended") {
-    context.resume();
-  }
+  ding.play().catch(() => {}); // unlock audio on first interaction
   startTuner();
 });
 
